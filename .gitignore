@@ -1,0 +1,15 @@
+/.bundle/
+/.yardoc
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/reports/
+/tmp/
+/exe/*/
+test/dummy/log/test.log
+.DS_Store
+vendor/cache/*
+.rubocop-*
+*.gem
+Gemfile.lock
