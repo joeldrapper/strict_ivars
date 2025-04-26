@@ -1,22 +1,22 @@
 # AyeVar 🏴‍☠️
 
-Note, this gem is very new and experimental. The API will probably change.
+Arrr, this gem be mighty fresh an’ experimental, me hearties! Th’ API be likely to shift with th’ tides.
 
 ## What does it do?
 
-It prevents you from using undefined instance variables by transforming your code as it is loaded.
+It prevents ye from usin’ undefined instance variables by transformin’ yer code as it be loaded, savvy?
 
-Instance variables must be defined in your object’s initializer (even if they are initially set to `nil`). Only then can they be accessed in the rest of the code.
+Instance variables must be declared in yer object’s initializer (even if they be initially set to `nil`). Only then can ye access ’em in th’ rest o’ yer code, ye scurvy dog!
 
 ## Setup
 
-Add this gem to your gemfile.
+Add this treasure to yer gemfile, arr!
 
 ```ruby
 gem "aye_var", require: false
 ```
 
-Then require and initialize it in your app as early as possible. If you’re using Bootsnap, it should be right after Bootsnap.
+Then require an’ initialize it in yer vessel as early as possible, ye hear? If ye be usin’ Bootsnap, it should be right after Bootsnap, or I’ll make ye walk th’ plank!
 
 ```ruby
 require "aye_var"
@@ -24,4 +24,4 @@ require "aye_var"
 AyeVar.init(include: ["#{Dir.pwd}/**/*"])
 ```
 
-You can pass in an array of globs to `include:` and `exclude:`.
+Ye can pass in an array o’ globs to `include:` an’ `exclude:`, ye bilge rat!
