@@ -6,6 +6,12 @@ require_relative "example"
 
 example = Example.new
 
+test "undefined write in singleton" do
+	refute_raises do
+		assert_equal 1, Example.bar
+	end
+end
+
 test "undefined read" do
 	assert_raises AyeVar::NameError do
 		assert example.foo
