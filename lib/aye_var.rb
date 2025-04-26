@@ -26,100 +26,62 @@ module AyeVar
 
 		def initialize
 			@definition_context = true
-			@context = [Set[]]
+			@stack = [Set[]]
 			@ivars = []
 		end
 
 		attr_reader :ivars
 
 		def visit_class_node(node)
-			@context.push(Set[])
-			super
-		ensure
-			@context.pop
+			new_context { super }
 		end
 
 		def visit_module_node(node)
-			@context.push(Set[])
-			super
-		ensure
-			@context.pop
+			new_context { super }
 		end
 
 		def visit_block_node(node)
-			@context.push(Set[])
-			super
-		ensure
-			@context.pop
+			new_context { super }
 		end
 
 		def visit_singleton_class_node(node)
-			@context.push(Set[])
-			super
-		ensure
-			@context.pop
+			new_context { super }
 		end
 
 		def visit_def_node(node)
-			@context.push(Set[])
-
-			if node.name == :initialize || node.name == :setup || Prism::SelfNode === node.receiver
-				super
-			else
-				disallow_definitions { super }
+			new_context do
+				if node.name == :initialize || node.name == :setup || Prism::SelfNode === node.receiver
+					super
+				else
+					disallow_definitions { super }
+				end
 			end
-		ensure
-			@context.pop
 		end
 
 		def visit_if_node(node)
 			visit(node.predicate)
 
-			@context.push(@context.last.dup)
-
-			begin
-				visit(node.statements)
-			ensure
-				@context.pop
-			end
-
-			@context.push(@context.last.dup)
-
-			begin
-				visit(node.subsequent)
-			ensure
-				@context.pop
-			end
+			dup_context { visit(node.statements) }
+			dup_context { visit(node.subsequent) }
 		end
 
 		def visit_case_node(node)
 			visit(node.predicate)
 
 			node.conditions.each do |condition|
-				@context.push(@context.last.dup)
-
-				begin
-					visit(condition)
-				ensure
-					@context.pop
-				end
+				dup_context { visit(condition) }
 			end
 
-			@context.push(@context.last.dup)
-			begin
-				visit(node.else_clause)
-			ensure
-				@context.pop
-			end
+			dup_context { visit(node.else_clause) }
 		end
 
 		def visit_instance_variable_read_node(node)
 			name = node.name
 
-			unless @context.last.include?(name)
+			unless context.include?(name)
 				location = node.location
 
-				@context.last << name
+				context << name
 
 				@ivars << [location.start_character_offset, :start, name]
 				@ivars << [location.end_character_offset, :end, name]
@@ -131,16 +93,35 @@ module AyeVar
 		def visit_instance_variable_write_node(node)
 			name = node.name
 
-			unless @definition_context || @context.last.include?(name)
+			unless @definition_context || context.include?(name)
 				location = node.location
 
-				@context.last << name
+				context << name
 
 				@ivars << [location.start_character_offset, :start, name]
 				@ivars << [location.end_character_offset, :end, name]
 			end
 
 			super
+		end
+
+		private def dup_context
+			@stack.push(context.dup)
+			yield
+		ensure
+			@stack.pop
+		end
+
+		private def new_context
+			@stack.push(Set[])
+			yield
+		ensure
+			@stack.pop
+		end
+
+		# The current context on the stack
+		private def context
+			@stack.last
 		end
 
 		private def disallow_definitions
