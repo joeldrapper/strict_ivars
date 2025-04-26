@@ -2,6 +2,14 @@
 
 Note, this gem is very new and experimental. The API will probably change.
 
+## What does it do?
+
+It prevents you from using undefined instance variables by transforming your code as it is loaded.
+
+Instance variables must be defined in your object’s initializer (even if they are initially set to `nil`). Only then can they be accessed in the rest of the code.
+
+## Setup
+
 Add this gem to your gemfile.
 
 ```ruby
