@@ -1,16 +1,17 @@
 # frozen_string_literal: true
 
 require "require-hooks/setup"
+require "prism"
 
 module AyeVar
 	class Processor < Prism::Visitor
 		def self.call(source)
-			object = new(source)
-			object.visit(Prism.parse(source).value)
+			visitor = new
+			visitor.visit(Prism.parse(source).value)
 
 			buffer = source.dup
 
-			object.ivars.sort_by(&:first).reverse_each do |offset, action, name|
+			visitor.ivars.sort_by(&:first).reverse_each do |offset, action, name|
 				case action
 				when :start
 					buffer.insert(offset, "((raise ::AyeVar::NameError.new('Undefined instance variable #{name}') unless defined?(#{name}));")
@@ -22,7 +23,7 @@ module AyeVar
 			buffer
 		end
 
-		def initialize(source)
+		def initialize
 			@initializer = false
 			@ivars = []
 		end
