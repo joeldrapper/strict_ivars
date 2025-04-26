@@ -16,9 +16,19 @@ class Example
 	end
 
 	def foo
-		@foo = 1
-		@foo = 2
-		@foo = 3
+		@a = 1
+
+		case foo
+		when 1
+			@a = 1
+			@b = 1
+		when 2
+			@a = 1
+			@b = 1
+		end
+
+		@a = 1
+		@b = 1
 	end
 
 	def foo=(value)

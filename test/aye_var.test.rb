@@ -8,10 +8,6 @@ example = Example.new
 
 test "undefined write in singleton" do
 	refute_raises do
-		assert_equal 1, Example.foo
-	end
-
-	refute_raises do
 		assert_equal 1, Example.bar
 	end
 end

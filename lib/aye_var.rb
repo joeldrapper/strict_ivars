@@ -25,53 +25,101 @@ module AyeVar
 		end
 
 		def initialize
-			@definition_context = false
-			@context = Set[]
+			@definition_context = true
+			@context = [Set[]]
 			@ivars = []
 		end
 
 		attr_reader :ivars
 
 		def visit_class_node(node)
-			@context.clear
+			@context.push(Set[])
 			super
+		ensure
+			@context.pop
 		end
 
 		def visit_module_node(node)
-			@context.clear
+			@context.push(Set[])
 			super
+		ensure
+			@context.pop
 		end
 
 		def visit_block_node(node)
-			@context.clear
+			@context.push(Set[])
 			super
+		ensure
+			@context.pop
 		end
 
 		def visit_singleton_class_node(node)
-			if node.operator == "<<" && Prism::SelfNode === node.expression
-				allow_definitions { super }
-			else
-				super
-			end
+			@context.push(Set[])
+			super
+		ensure
+			@context.pop
 		end
 
 		def visit_def_node(node)
-			@context.clear
+			@context.push(Set[])
 
 			if node.name == :initialize || node.name == :setup || Prism::SelfNode === node.receiver
-				allow_definitions { super }
-			else
 				super
+			else
+				disallow_definitions { super }
+			end
+		ensure
+			@context.pop
+		end
+
+		def visit_if_node(node)
+			visit(node.predicate)
+
+			@context.push(@context.last.dup)
+
+			begin
+				visit(node.statements)
+			ensure
+				@context.pop
+			end
+
+			@context.push(@context.last.dup)
+
+			begin
+				visit(node.subsequent)
+			ensure
+				@context.pop
+			end
+		end
+
+		def visit_case_node(node)
+			visit(node.predicate)
+
+			node.conditions.each do |condition|
+				@context.push(@context.last.dup)
+
+				begin
+					visit(condition)
+				ensure
+					@context.pop
+				end
+			end
+
+			@context.push(@context.last.dup)
+			begin
+				visit(node.else_clause)
+			ensure
+				@context.pop
 			end
 		end
 
 		def visit_instance_variable_read_node(node)
 			name = node.name
 
-			unless @context.include?(name)
+			unless @context.last.include?(name)
 				location = node.location
 
-				@context << name
+				@context.last << name
 
 				@ivars << [location.start_character_offset, :start, name]
 				@ivars << [location.end_character_offset, :end, name]
@@ -83,10 +131,10 @@ module AyeVar
 		def visit_instance_variable_write_node(node)
 			name = node.name
 
-			unless @definition_context || @context.include?(name)
+			unless @definition_context || @context.last.include?(name)
 				location = node.location
 
-				@context << name
+				@context.last << name
 
 				@ivars << [location.start_character_offset, :start, name]
 				@ivars << [location.end_character_offset, :end, name]
@@ -95,19 +143,17 @@ module AyeVar
 			super
 		end
 
-		private def allow_definitions
+		private def disallow_definitions
 			original_definition_context = @definition_context
 
 			begin
-				@definition_context = true
+				@definition_context = false
 				yield
 			ensure
 				@definition_context = original_definition_context
 			end
 		end
 	end
-
-	private_constant :Processor
 
 	NameError = Class.new(::NameError)
 
