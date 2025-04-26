@@ -1,4 +1,4 @@
-## AyeVar
+# AyeVar 🏴‍☠️
 
 Note, this gem is very new and experimental. The API will probably change.
 
