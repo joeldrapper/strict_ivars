@@ -20,48 +20,90 @@ module AyeVar
 				end
 			end
 
+			puts buffer
 			buffer
 		end
 
 		def initialize
-			@initializer = false
+			@definition_context = false
+			@context = Set[]
 			@ivars = []
 		end
 
 		attr_reader :ivars
 
+		def visit_class_node(node)
+			@context.clear
+			super
+		end
+
+		def visit_module_node(node)
+			@context.clear
+			super
+		end
+
+		def visit_block_node(node)
+			@context.clear
+			super
+		end
+
+		def visit_singleton_class_node(node)
+			if node.operator == "<<" && Prism::SelfNode === node.expression
+				allow_definitions { super }
+			else
+				super
+			end
+		end
+
 		def visit_def_node(node)
-			if node.name == :initialize
-				begin
-					@initializer = true
-					super
-				ensure
-					@initializer = false
-				end
+			@context.clear
+
+			if node.name == :initialize || node.name == :setup || Prism::SelfNode === node.receiver
+				allow_definitions { super }
 			else
 				super
 			end
 		end
 
 		def visit_instance_variable_read_node(node)
-			location = node.location
 			name = node.name
 
-			@ivars << [location.start_character_offset, :start, name]
-			@ivars << [location.end_character_offset, :end, name]
-			super
-		end
-
-		def visit_instance_variable_write_node(node)
-			unless @initializer
+			unless @context.include?(name)
 				location = node.location
-				name = node.name
+
+				@context << name
 
 				@ivars << [location.start_character_offset, :start, name]
 				@ivars << [location.end_character_offset, :end, name]
 			end
 
 			super
+		end
+
+		def visit_instance_variable_write_node(node)
+			name = node.name
+
+			unless @definition_context || @context.include?(name)
+				location = node.location
+
+				@context << name
+
+				@ivars << [location.start_character_offset, :start, name]
+				@ivars << [location.end_character_offset, :end, name]
+			end
+
+			super
+		end
+
+		private def allow_definitions
+			original_definition_context = @definition_context
+
+			begin
+				@definition_context = true
+				yield
+			ensure
+				@definition_context = original_definition_context
+			end
 		end
 	end
 
