@@ -4,6 +4,8 @@ require "require-hooks/setup"
 require "prism"
 
 module AyeVar
+	METHODS_PERMITTED_FOR_DEFINITION = Set[:initialize, :setup].freeze
+
 	NameError = Class.new(::NameError)
 
 	def self.init(include: [], exclude: [])
@@ -36,34 +38,37 @@ module AyeVar
 
 		def initialize
 			@definition_context = true
-			@stack = [Set[]]
+			@this = nil
+			@context = nil
 			@annotations = []
 		end
 
 		attr_reader :annotations
 
 		def visit_class_node(node)
-			new_context { super }
+			new_context(node) { super }
 		end
 
 		def visit_module_node(node)
-			new_context { super }
+			new_context(node) { super }
 		end
 
 		def visit_block_node(node)
-			new_context { super }
+			new_context(node) { super }
 		end
 
 		def visit_singleton_class_node(node)
-			new_context { super }
+			new_context(node) { super }
 		end
 
 		def visit_def_node(node)
-			new_context do
-				if node.name == :initialize || node.name == :setup || Prism::SelfNode === node.receiver
+			parent = @this
+
+			new_context(node) do
+				if METHODS_PERMITTED_FOR_DEFINITION.include?(node.name) || Prism::SelfNode === node.receiver || !(Prism::ClassNode === parent)
 					super
 				else
-					disallow_definitions { super }
+					prevent_definitions { super }
 				end
 			end
 		end
@@ -115,32 +120,38 @@ module AyeVar
 			super
 		end
 
-		private def new_context
-			@stack.push(Set[])
+		private def new_context(this)
+			original_this = @this
+			original_context = @context
+
+			@this = this
+			@context = Set[]
 
 			begin
 				yield
 			ensure
-				@stack.pop
+				@this = original_this
+				@context = original_context
 			end
 		end
 
 		private def branch
-			@stack.push(context.dup)
+			original_context = @context
+			@context = original_context.dup
 
 			begin
 				yield
 			ensure
-				@stack.pop
+				@context = original_context
 			end
 		end
 
 		# The current context on the stack
 		private def context
-			@stack.last
+			@context
 		end
 
-		private def disallow_definitions
+		private def prevent_definitions
 			original_definition_context = @definition_context
 
 			begin
