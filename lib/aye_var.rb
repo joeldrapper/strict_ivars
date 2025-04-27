@@ -26,6 +26,8 @@ module AyeVar
 					buffer.insert(offset, "((raise ::AyeVar::NameError.new('Undefined instance variable #{name}') unless defined?(#{name}));")
 				when :end
 					buffer.insert(offset, ")")
+				else
+					raise "Invalid annotation"
 				end
 			end
 
