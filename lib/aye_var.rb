@@ -4,6 +4,15 @@ require "require-hooks/setup"
 require "prism"
 
 module AyeVar
+	NameError = Class.new(::NameError)
+
+	def self.init(include: [], exclude: [])
+		RequireHooks.source_transform(patterns: include, exclude_patterns: exclude) do |path, source|
+			source ||= File.read(path)
+			Processor.call(source)
+		end
+	end
+
 	class Processor < Prism::Visitor
 		def self.call(source)
 			visitor = new
@@ -138,15 +147,6 @@ module AyeVar
 			ensure
 				@definition_context = original_definition_context
 			end
-		end
-	end
-
-	NameError = Class.new(::NameError)
-
-	def self.init(include: [], exclude: [])
-		RequireHooks.source_transform(patterns: include, exclude_patterns: exclude) do |path, source|
-			source ||= File.read(path)
-			Processor.call(source)
 		end
 	end
 end
