@@ -1,20 +1,20 @@
 # AyeVar 🏴‍☠️
 
-Arrr, this gem be mighty fresh an’ experimental, me hearties! Th’ API be liable to shift with th’ tides.
+Avast ye, this gem be fresh off th’ plunderin’ an’ experimental as a new recruit, me hearties! Th’ API be shiftin’ like th’ treacherous seas beneath yer barnacled hull.
 
 ## What does it do?
 
-It prevents ye from usin’ undefined instance variables by transformin’ yer code as it be loaded, savvy?
+It keelhauls them scurvy undefined instance variables by transformin’ yer code as it loads into th’ hold, savvy? Davy Jones ’imself would approve!
 
 ## Setup
 
-Add this treasure to yer gemfile, arr!
+Add this precious booty to yer gemfile, shiver me timbers!
 
 ```ruby
 gem "aye_var", require: false
 ```
 
-Then require an’ initialize it in yer vessel as early as possible, ye hear? If ye be usin’ Bootsnap, it should be right after Bootsnap, or I’ll make ye walk th’ plank!
+Then be requirin’ an’ initializin’ it in yer galleon as early as ye can hoist sail, ye scallywag! If ye be usin’ Bootsnap, place it right after, or by the powers, ye’ll be swimmin’ with th’ fishes!
 
 ```ruby
 require "aye_var"
@@ -22,4 +22,4 @@ require "aye_var"
 AyeVar.init(include: ["#{Dir.pwd}/**/*"])
 ```
 
-Ye can pass in an array o’ globs to `include:` an’ `exclude:`, ye bilge rat!
+Ye can pass an array o’ globs to `include:` an’ `exclude:`, or I’ll feed ye to th’ kraken, ye mangy bilge-suckin’ swab!
