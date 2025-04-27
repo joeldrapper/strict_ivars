@@ -30,4 +30,12 @@ class Example
 	def bar=(value)
 		@bar = value
 	end
+
+	def lazy
+		if defined?(@lazy)
+			@lazy
+		else
+			@lazy = 1
+		end
+	end
 end
