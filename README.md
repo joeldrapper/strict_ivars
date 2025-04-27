@@ -1,12 +1,10 @@
 # AyeVar 🏴‍☠️
 
-Arrr, this gem be mighty fresh an’ experimental, me hearties! Th’ API be likely to shift with th’ tides.
+Arrr, this gem be mighty fresh an’ experimental, me hearties! Th’ API be liable to shift with th’ tides.
 
 ## What does it do?
 
 It prevents ye from usin’ undefined instance variables by transformin’ yer code as it be loaded, savvy?
-
-Instance variables must be declared in yer object’s initializer (even if they be initially set to `nil`). Only then can ye access ’em in th’ rest o’ yer code, ye scurvy dog!
 
 ## Setup
 
