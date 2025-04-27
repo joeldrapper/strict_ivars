@@ -106,16 +106,22 @@ module AyeVar
 
 		private def dup_context
 			@stack.push(context.dup)
-			yield
-		ensure
-			@stack.pop
+
+			begin
+				yield
+			ensure
+				@stack.pop
+			end
 		end
 
 		private def new_context
 			@stack.push(Set[])
-			yield
-		ensure
-			@stack.pop
+
+			begin
+				yield
+			ensure
+				@stack.pop
+			end
 		end
 
 		# The current context on the stack
