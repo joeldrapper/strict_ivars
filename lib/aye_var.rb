@@ -61,6 +61,14 @@ module AyeVar
 			new_context(node) { super }
 		end
 
+		def visit_defined_node(node)
+			if Prism::InstanceVariableReadNode === node.value
+				context << node.value.name
+			end
+
+			super
+		end
+
 		def visit_def_node(node)
 			parent = @this
 
