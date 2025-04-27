@@ -71,18 +71,18 @@ module AyeVar
 		def visit_if_node(node)
 			visit(node.predicate)
 
-			dup_context { visit(node.statements) }
-			dup_context { visit(node.subsequent) }
+			branch { visit(node.statements) }
+			branch { visit(node.subsequent) }
 		end
 
 		def visit_case_node(node)
 			visit(node.predicate)
 
 			node.conditions.each do |condition|
-				dup_context { visit(condition) }
+				branch { visit(condition) }
 			end
 
-			dup_context { visit(node.else_clause) }
+			branch { visit(node.else_clause) }
 		end
 
 		def visit_instance_variable_read_node(node)
@@ -115,8 +115,8 @@ module AyeVar
 			super
 		end
 
-		private def dup_context
-			@stack.push(context.dup)
+		private def new_context
+			@stack.push(Set[])
 
 			begin
 				yield
@@ -125,8 +125,8 @@ module AyeVar
 			end
 		end
 
-		private def new_context
-			@stack.push(Set[])
+		private def branch
+			@stack.push(context.dup)
 
 			begin
 				yield
