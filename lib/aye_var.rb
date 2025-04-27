@@ -11,7 +11,7 @@ module AyeVar
 
 			buffer = source.dup
 
-			visitor.ivars.sort_by(&:first).reverse_each do |offset, action, name|
+			visitor.annotations.sort_by(&:first).reverse_each do |offset, action, name|
 				case action
 				when :start
 					buffer.insert(offset, "((raise ::AyeVar::NameError.new('Undefined instance variable #{name}') unless defined?(#{name}));")
@@ -20,17 +20,16 @@ module AyeVar
 				end
 			end
 
-			puts buffer
 			buffer
 		end
 
 		def initialize
 			@definition_context = true
 			@stack = [Set[]]
-			@ivars = []
+			@annotations = []
 		end
 
-		attr_reader :ivars
+		attr_reader :annotations
 
 		def visit_class_node(node)
 			new_context { super }
@@ -83,8 +82,8 @@ module AyeVar
 
 				context << name
 
-				@ivars << [location.start_character_offset, :start, name]
-				@ivars << [location.end_character_offset, :end, name]
+				@annotations << [location.start_character_offset, :start, name]
+				@annotations << [location.end_character_offset, :end, name]
 			end
 
 			super
@@ -98,8 +97,8 @@ module AyeVar
 
 				context << name
 
-				@ivars << [location.start_character_offset, :start, name]
-				@ivars << [location.end_character_offset, :end, name]
+				@annotations << [location.start_character_offset, :start, name]
+				@annotations << [location.end_character_offset, :end, name]
 			end
 
 			super
