@@ -4,8 +4,6 @@ require "require-hooks/setup"
 require "prism"
 
 module AyeVar
-	METHODS_PERMITTED_FOR_DEFINITION = Set[:initialize, :setup].freeze
-
 	NameError = Class.new(::NameError)
 
 	def self.init(include: [], exclude: [])
@@ -25,7 +23,7 @@ module AyeVar
 			visitor.annotations.sort_by(&:first).reverse_each do |offset, action, name|
 				case action
 				when :start
-					buffer.insert(offset, "((raise ::AyeVar::NameError.new('Undefined instance variable #{name}') unless defined?(#{name}));")
+					buffer.insert(offset, "((raise ::AyeVar::NameError.new('Undefined instance variable #{name}') unless defined?(#{name})); ")
 				when :end
 					buffer.insert(offset, ")")
 				else
@@ -37,9 +35,8 @@ module AyeVar
 		end
 
 		def initialize
-			@definition_context = true
 			@this = nil
-			@context = nil
+			@context = Set[]
 			@annotations = []
 		end
 
@@ -70,15 +67,7 @@ module AyeVar
 		end
 
 		def visit_def_node(node)
-			parent = @this
-
-			new_context(node) do
-				if METHODS_PERMITTED_FOR_DEFINITION.include?(node.name) || Prism::SelfNode === node.receiver || !(Prism::ClassNode === parent)
-					super
-				else
-					prevent_definitions { super }
-				end
-			end
+			new_context(node) { super }
 		end
 
 		def visit_if_node(node)
@@ -102,21 +91,6 @@ module AyeVar
 			name = node.name
 
 			unless context.include?(name)
-				location = node.location
-
-				context << name
-
-				@annotations << [location.start_character_offset, :start, name]
-				@annotations << [location.end_character_offset, :end, name]
-			end
-
-			super
-		end
-
-		def visit_instance_variable_write_node(node)
-			name = node.name
-
-			unless @definition_context || context.include?(name)
 				location = node.location
 
 				context << name
@@ -157,17 +131,6 @@ module AyeVar
 		# The current context on the stack
 		private def context
 			@context
-		end
-
-		private def prevent_definitions
-			original_definition_context = @definition_context
-
-			begin
-				@definition_context = false
-				yield
-			ensure
-				@definition_context = original_definition_context
-			end
 		end
 	end
 end
