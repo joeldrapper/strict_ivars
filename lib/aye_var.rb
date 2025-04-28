@@ -23,7 +23,7 @@ module AyeVar
 			visitor.annotations.sort_by(&:first).reverse_each do |offset, action, name|
 				case action
 				when :start
-					buffer.insert(offset, "((raise ::AyeVar::NameError.new('Undefined instance variable #{name}') unless defined?(#{name})); ")
+					buffer.insert(offset, "((::Kernel.raise ::AyeVar::NameError.new('Undefined instance variable #{name}') unless defined?(#{name})); ")
 				when :end
 					buffer.insert(offset, ")")
 				else
