@@ -35,7 +35,6 @@ module AyeVar
 		end
 
 		def initialize
-			@this = nil
 			@context = Set[]
 			@annotations = []
 		end
@@ -43,31 +42,31 @@ module AyeVar
 		attr_reader :annotations
 
 		def visit_class_node(node)
-			new_context(node) { super }
+			new_context { super }
 		end
 
 		def visit_module_node(node)
-			new_context(node) { super }
+			new_context { super }
 		end
 
 		def visit_block_node(node)
-			new_context(node) { super }
+			new_context { super }
 		end
 
 		def visit_singleton_class_node(node)
-			new_context(node) { super }
+			new_context { super }
 		end
 
 		def visit_defined_node(node)
 			if Prism::InstanceVariableReadNode === node.value
-				context << node.value.name
+				@context << node.value.name
 			end
 
 			super
 		end
 
 		def visit_def_node(node)
-			new_context(node) { super }
+			new_context { super }
 		end
 
 		def visit_if_node(node)
@@ -90,10 +89,10 @@ module AyeVar
 		def visit_instance_variable_read_node(node)
 			name = node.name
 
-			unless context.include?(name)
+			unless @context.include?(name)
 				location = node.location
 
-				context << name
+				@context << name
 
 				@annotations << [location.start_character_offset, :start, name]
 				@annotations << [location.end_character_offset, :end, name]
@@ -102,17 +101,14 @@ module AyeVar
 			super
 		end
 
-		private def new_context(this)
-			original_this = @this
+		private def new_context
 			original_context = @context
 
-			@this = this
 			@context = Set[]
 
 			begin
 				yield
 			ensure
-				@this = original_this
 				@context = original_context
 			end
 		end
@@ -126,11 +122,6 @@ module AyeVar
 			ensure
 				@context = original_context
 			end
-		end
-
-		# The current context on the stack
-		private def context
-			@context
 		end
 	end
 end
