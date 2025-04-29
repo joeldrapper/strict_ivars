@@ -23,3 +23,9 @@ AyeVar.init(include: ["#{Dir.pwd}/**/*"])
 ```
 
 Ye can pass an array o’ globs to `include:` an’ `exclude:`, or I’ll feed ye to th’ kraken, ye mangy bilge-suckin’ swab!
+
+## Uninstall
+
+By the powers! On account o’ how AyeVar works, ye can cut ’er loose any time without havin’ ta meddle with yer code, ye scurvy dogs! Just cast the gem to Davy Jones’ locker an’ scrub the `AyeVar.init` call from yer charts!
+
+If ye be usin’ Bootsnap, ye’ll need ta swab yer Bootsnap cache clean by sendin’ `temp/cache/bootsnap` to the briny deep!
