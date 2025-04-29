@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 module AyeVar
-	VERSION = "0.1.1"
+	VERSION = "0.3.0"
 end
