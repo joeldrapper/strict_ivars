@@ -6,6 +6,7 @@ require "require-hooks/setup"
 module StrictIvars
 	NameError = Class.new(::NameError)
 
+	#: (include: Array[String], exclude: Array[String]) -> void
 	def self.init(include: [], exclude: [])
 		RequireHooks.source_transform(
 			patterns: include,

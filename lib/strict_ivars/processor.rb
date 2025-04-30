@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class StrictIvars::Processor < Prism::Visitor
+	#: (String) -> String
 	def self.call(source)
 		visitor = new
 		visitor.visit(Prism.parse(source).value)
@@ -27,24 +28,30 @@ class StrictIvars::Processor < Prism::Visitor
 		@annotations = []
 	end
 
+	#: Array[[Integer, :start | :end, Symbol]]
 	attr_reader :annotations
 
+	#: (Prism::ClassNode) -> void
 	def visit_class_node(node)
 		new_context { super }
 	end
 
+	#: (Prism::ModuleNode) -> void
 	def visit_module_node(node)
 		new_context { super }
 	end
 
+	#: (Prism::BlockNode) -> void
 	def visit_block_node(node)
 		new_context { super }
 	end
 
+	#: (Prism::SingletonClassNode) -> void
 	def visit_singleton_class_node(node)
 		new_context { super }
 	end
 
+	#: (Prism::DefinedNode) -> void
 	def visit_defined_node(node)
 		value = node.value
 
@@ -55,10 +62,12 @@ class StrictIvars::Processor < Prism::Visitor
 		super
 	end
 
+	#: (Prism::DefNode) -> void
 	def visit_def_node(node)
 		new_context { super }
 	end
 
+	#: (Prism::IfNode) -> void
 	def visit_if_node(node)
 		visit(node.predicate)
 
@@ -66,6 +75,7 @@ class StrictIvars::Processor < Prism::Visitor
 		branch { visit(node.subsequent) }
 	end
 
+	#: (Prism::CaseNode) -> void
 	def visit_case_node(node)
 		visit(node.predicate)
 
@@ -76,6 +86,7 @@ class StrictIvars::Processor < Prism::Visitor
 		branch { visit(node.else_clause) }
 	end
 
+	#: (Prism::InstanceVariableReadNode) -> void
 	def visit_instance_variable_read_node(node)
 		name = node.name
 
@@ -92,6 +103,7 @@ class StrictIvars::Processor < Prism::Visitor
 		super
 	end
 
+	#: () { () -> void } -> void
 	private def new_context
 		original_context = @context
 
@@ -104,6 +116,7 @@ class StrictIvars::Processor < Prism::Visitor
 		end
 	end
 
+	#: () { () -> void } -> void
 	private def branch
 		original_context = @context
 		@context = original_context.dup
