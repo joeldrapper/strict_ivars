@@ -10,9 +10,9 @@ class StrictIvars::Processor < Prism::Visitor
 		visitor.annotations.sort_by(&:first).reverse_each do |offset, action, name|
 			case action
 			when :start
-				buffer.insert(offset, "((::Kernel.raise ::StrictIvars::NameError.new('Undefined instance variable #{name}') unless defined?(#{name})); ")
+				buffer.insert(offset, "(defined?(#{name}) ? ")
 			when :end
-				buffer.insert(offset, ")")
+				buffer.insert(offset, " : (::Kernel.raise(::StrictIvars::NameError.new('Undefined instance variable #{name}'))))")
 			else
 				raise "Invalid annotation"
 			end
