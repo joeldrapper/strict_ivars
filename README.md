@@ -10,7 +10,7 @@ For example, it will replace this:
 
 ```ruby
 def example
-	foo if @bar
+  foo if @bar
 end
 ```
 
@@ -18,7 +18,7 @@ with something like this:
 
 ```ruby
 def example
-	foo if (raise unless defined?(@bar); @bar)
+  foo if (raise unless defined?(@bar); @bar)
 end
 ```
 
