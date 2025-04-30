@@ -146,6 +146,116 @@ test "open method definition def" do
 	RUBY
 end
 
+test "class isolation" do
+	processed = StrictIvars::Processor.call(<<~RUBY)
+		@a
+		@a
+
+		class Foo
+			@a
+			@a
+		end
+	RUBY
+
+	assert_equal_ruby processed, <<~RUBY
+		#{guarded(:@a)}
+		@a
+
+		class Foo
+			#{guarded(:@a)}
+			@a
+		end
+	RUBY
+end
+
+test "module isolation" do
+	processed = StrictIvars::Processor.call(<<~RUBY)
+		@a
+		@a
+
+		module Foo
+			@a
+			@a
+		end
+	RUBY
+
+	assert_equal_ruby processed, <<~RUBY
+		#{guarded(:@a)}
+		@a
+
+		module Foo
+			#{guarded(:@a)}
+			@a
+		end
+	RUBY
+end
+
+test "block isolation" do
+	processed = StrictIvars::Processor.call(<<~RUBY)
+		@a
+		@a
+
+		anything do
+			@a
+			@a
+		end
+	RUBY
+
+	assert_equal_ruby processed, <<~RUBY
+		#{guarded(:@a)}
+		@a
+
+		anything do
+			#{guarded(:@a)}
+			@a
+		end
+	RUBY
+end
+
+test "singleton class isolation" do
+	processed = StrictIvars::Processor.call(<<~RUBY)
+		@a
+		@a
+
+		class << self
+			@a
+			@a
+		end
+	RUBY
+
+	assert_equal_ruby processed, <<~RUBY
+		#{guarded(:@a)}
+		@a
+
+		class << self
+			#{guarded(:@a)}
+			@a
+		end
+	RUBY
+end
+
+test "manual defined? guard" do
+	processed = StrictIvars::Processor.call(<<~RUBY)
+		def foo
+			if defined?(@foo)
+				@foo
+			else
+				@foo = 1
+			end
+		end
+	RUBY
+
+	assert_equal_ruby processed, <<~RUBY
+		def foo
+			if defined?(@foo)
+				@foo
+			else
+				@foo = 1
+			end
+		end
+	RUBY
+end
+
 def guarded(name)
 	"(defined?(#{name.name}) ? #{name.name} : (::Kernel.raise(::StrictIvars::NameError.new('Undefined instance variable #{name.name}'))))"
 end
