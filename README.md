@@ -44,6 +44,20 @@ require "strict_ivars"
 StrictIvars.init(include: ["#{Dir.pwd}/**/*"])
 ```
 
+You can pass an array of globs to `include:` and `exclude:`.
+
+## Compatibility
+
+Because Strict Ivars only transforms the source code that matches your include paths and becuase the check happens at runtime, it’s completely compatible with the rest of the Ruby ecosystem.
+
+### For apps
+
+Strict Ivars is really designed for apps, where you control the boot process and you want some extra safety in the code you and your team writes.
+
+### For libraries
+
+You could use Strict Ivars as a dev dependency in your gem’s test suite, but I don’t recommend initializing Strict Ivars in a library directly.
+
 ## Uninstall
 
 Becuase Strict Ivars only ever makes your code safer, you can always back out without anything breaking.
