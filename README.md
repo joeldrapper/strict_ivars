@@ -22,7 +22,9 @@ def example
 end
 ```
 
-The replacement happens on load, so you never see this in your source code. It’s also always wrapped in parentheses and takes up a single line, so it won’t mess up the line numbers in exceptions. The real exception is a little uglier than this. It uses `::Kernel.raise` so it’s compatible with `BasicObject`. It also raises a `StrictIvars::NameError` with a helpful message mentioning the name of the instance variable, and that inherits from `NameError`, allowing you to rescue either `NameError` or `StrictIvars::NameError`.
+The replacement happens on load, so you never see this in your source code. It’s also always wrapped in parentheses and takes up a single line, so it won’t mess up the line numbers in exceptions.
+
+The real guard is a little uglier than this. It uses `::Kernel.raise` so it’s compatible with `BasicObject`. It also raises a `StrictIvars::NameError` with a helpful message mentioning the name of the instance variable, and that inherits from `NameError`, allowing you to rescue either `NameError` or `StrictIvars::NameError`.
 
 ## Setup
 
@@ -41,6 +43,20 @@ require "strict_ivars"
 
 StrictIvars.init(include: ["#{Dir.pwd}/**/*"])
 ```
+
+You can pass an array of globs to `include:` and `exclude:`.
+
+## Compatibility
+
+Because Strict Ivars only transforms the source code that matches your include paths and becuase the check happens at runtime, it’s completely compatible with the rest of the Ruby ecosystem.
+
+### For apps
+
+Strict Ivars is really designed for apps, where you control the boot process and you want some extra safety in the code you and your team writes.
+
+### For libraries
+
+You could use Strict Ivars as a dev dependency in your gem’s test suite, but I don’t recommend initializing Strict Ivars in a library directly.
 
 ## Uninstall
 
