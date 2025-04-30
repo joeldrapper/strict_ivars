@@ -22,7 +22,9 @@ def example
 end
 ```
 
-The replacement happens on load, so you never see this in your source code. It’s also always wrapped in parentheses and takes up a single line, so it won’t mess up the line numbers in exceptions. The real exception is a little uglier than this. It uses `::Kernel.raise` so it’s compatible with `BasicObject`. It also raises a `StrictIvars::NameError` with a helpful message mentioning the name of the instance variable, and that inherits from `NameError`, allowing you to rescue either `NameError` or `StrictIvars::NameError`.
+The replacement happens on load, so you never see this in your source code. It’s also always wrapped in parentheses and takes up a single line, so it won’t mess up the line numbers in exceptions.
+
+The real guard is a little uglier than this. It uses `::Kernel.raise` so it’s compatible with `BasicObject`. It also raises a `StrictIvars::NameError` with a helpful message mentioning the name of the instance variable, and that inherits from `NameError`, allowing you to rescue either `NameError` or `StrictIvars::NameError`.
 
 ## Setup
 
