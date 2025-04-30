@@ -24,13 +24,15 @@ end
 
 ## Setup
 
-Install the gem by adding it to your `Gemfile` and running `bundle install`. You may want to set it to `require: false` because you need to require it at the right moment.
+Install the gem by adding it to your `Gemfile` and running `bundle install`.
+
+You may want to set it to `require: false` here because you should require it manually at precisely the right moment.
 
 ```ruby
 gem "strict_ivars", require: false
 ```
 
-Then require and initialize the gem as early as possible in your boot process. Ideally, this should be right after bootsnap.
+Now the gem is installed, you should require and initialize the gem as early as possible in your boot process. Ideally, this should be right after bootsnap. In Rails, this will be in your `boot.rb` file.
 
 ```ruby
 require "strict_ivars"
