@@ -1,31 +1,39 @@
-# AyeVar 🏴‍☠️
+# StrictIvars
 
-Avast ye, this gem be fresh off th’ plunderin’ an’ experimental as a new recruit, me hearties! Th’ API be shiftin’ like th’ treacherous seas beneath yer barnacled hull.
+StrictIvars is a tiny pre-processor for Ruby that guards your instance variable reads, ensuring the instance variable is actually defined. This helps catch typos early.
 
-## What does it do?
+## How does it work?
 
-It keelhauls them scurvy undefined instance variables by transformin’ yer code as it loads into th’ hold, savvy? Davy Jones ’imself would approve!
+When StrictIvars detects that you are loading code from paths its configured to handle, it quickly looks for instance variable reads and guards them with a `defined?` check.
+
+For example, it will replace this:
+
+```ruby
+def example
+	foo if @bar
+end
+```
+
+with something like this:
+
+```ruby
+	def example
+		foo if (raise unless defined?(@bar); @bar)
+	end
+```
 
 ## Setup
 
-Add this precious booty to yer gemfile, shiver me timbers!
+Install the gem by adding it to your `Gemfile` and running `bundle install`. You may want to set it to `require: false` because you need to require it at the right moment.
 
 ```ruby
-gem "aye_var", require: false
+gem "strict_ivars", require: false
 ```
 
-Then be requirin’ an’ initializin’ it in yer galleon as early as ye can hoist sail, ye scallywag! If ye be usin’ Bootsnap, place it right after, or by the powers, ye’ll be swimmin’ with th’ fishes!
+Then require and initialize the gem as early as possible in your boot process. Ideally, this should be right after bootsnap.
 
 ```ruby
-require "aye_var"
+require "strict_ivars"
 
-AyeVar.init(include: ["#{Dir.pwd}/**/*"])
+StrictIvars.init(include: ["#{Dir.pwd}/**/*"])
 ```
-
-Ye can pass an array o’ globs to `include:` an’ `exclude:`, or I’ll feed ye to th’ kraken, ye mangy bilge-suckin’ swab!
-
-## Uninstall
-
-By the powers! On account o’ how AyeVar works, ye can cut ’er loose any time without havin’ ta meddle with yer code, ye scurvy dogs! Just cast the gem to Davy Jones’ locker an’ scrub the `AyeVar.init` call from yer charts!
-
-If ye be usin’ Bootsnap, ye’ll need ta swab yer Bootsnap cache clean by sendin’ `temp/cache/bootsnap` to the briny deep!

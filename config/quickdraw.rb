@@ -13,4 +13,4 @@ end
 
 Bundler.require :test
 
-require "aye_var"
+require "strict_ivars"

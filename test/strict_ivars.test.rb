@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-AyeVar.init(include: ["#{Dir.pwd}/**/*"])
+StrictIvars.init(include: ["#{Dir.pwd}/**/*"])
 
 require_relative "example"
 
 example = Example.new
 
 test "undefined read" do
-	assert_raises AyeVar::NameError do
+	assert_raises StrictIvars::NameError do
 		assert example.foo
 	end
 end
@@ -21,7 +21,7 @@ end
 basic_object_example = BasicObjectExample.new
 
 test "basic object undefined read" do
-	assert_raises AyeVar::NameError do
+	assert_raises StrictIvars::NameError do
 		assert basic_object_example.foo
 	end
 end
