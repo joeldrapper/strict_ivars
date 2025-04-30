@@ -1,4 +1,4 @@
-# StrictIvars
+# Strict Ivars
 
 StrictIvars is a tiny pre-processor for Ruby that guards your instance variable reads, ensuring the instance variable is actually defined. This helps catch typos early.
 
@@ -17,9 +17,9 @@ end
 with something like this:
 
 ```ruby
-	def example
-		foo if (raise unless defined?(@bar); @bar)
-	end
+def example
+	foo if (raise unless defined?(@bar); @bar)
+end
 ```
 
 ## Setup
