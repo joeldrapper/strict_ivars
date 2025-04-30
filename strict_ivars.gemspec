@@ -27,6 +27,7 @@ Gem::Specification.new do |spec|
 	spec.require_paths = ["lib"]
 
 	spec.metadata["rubygems_mfa_required"] = "true"
-	spec.add_dependency "require-hooks"
+
+	spec.add_dependency "require-hooks", "~> 0.2"
 	spec.add_dependency "prism"
 end
