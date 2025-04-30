@@ -18,7 +18,7 @@ with something like this:
 
 ```ruby
 def example
-  foo if (raise unless defined?(@bar); @bar)
+  foo if (defined?(@bar) ? @bar : raise)
 end
 ```
 
