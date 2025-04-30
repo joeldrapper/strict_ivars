@@ -62,7 +62,7 @@ You could use Strict Ivars as a dev dependency in your gem’s test suite, but I
 
 #### Startup performance
 
-Using Strict Ivars will impact startup performance since it needs to process each Ruby file you require. However, if you are using Bootsnap, the processed instruction sequences are cached and you probably won’t notice the incremental cache misses day-to-day.
+Using Strict Ivars will impact startup performance since it needs to process each Ruby file you require. However, if you are using Bootsnap, the processed RubyVM::InstructionSequences will be cached and you probably won’t notice the incremental cache misses day-to-day.
 
 #### Runtime performance
 
