@@ -1,10 +1,10 @@
 # Strict Ivars
 
-StrictIvars is a tiny pre-processor for Ruby that guards your instance variable reads, ensuring the instance variable is actually defined. This helps catch typos early.
+Strict Ivars is a tiny pre-processor for Ruby that guards your instance variable reads, ensuring the instance variable is actually defined. This helps catch typos nice and early.
 
 ## How does it work?
 
-When StrictIvars detects that you are loading code from paths its configured to handle, it quickly looks for instance variable reads and guards them with a `defined?` check.
+When Strict Ivars detects that you are loading code from paths its configured to handle, it quickly looks for instance variable reads and guards them with a `defined?` check.
 
 For example, it will replace this:
 
@@ -14,13 +14,15 @@ def example
 end
 ```
 
-with something like this:
+...with something like this:
 
 ```ruby
 def example
   foo if (defined?(@bar) ? @bar : raise)
 end
 ```
+
+The replacement happens on load, so you never see this in your source code. It’s also always wrapped in parentheses and takes up a single line, so it won’t mess up the line numbers in exceptions.
 
 ## Setup
 
