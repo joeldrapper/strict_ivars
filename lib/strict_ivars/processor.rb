@@ -4,10 +4,11 @@ class StrictIvars::Processor < Prism::Visitor
 	def self.call(source)
 		visitor = new
 		visitor.visit(Prism.parse(source).value)
-
 		buffer = source.dup
+		annotations = visitor.annotations
+		annotations.sort_by!(&:first)
 
-		visitor.annotations.sort_by(&:first).reverse_each do |offset, action, name|
+		annotations.reverse_each do |offset, action, name|
 			case action
 			when :start
 				buffer.insert(offset, "(defined?(#{name}) ? ")
@@ -45,8 +46,10 @@ class StrictIvars::Processor < Prism::Visitor
 	end
 
 	def visit_defined_node(node)
-		if Prism::InstanceVariableReadNode === node.value
-			@context << node.value.name
+		value = node.value
+
+		if Prism::InstanceVariableReadNode === value
+			@context << value.name
 		end
 
 		super
@@ -81,8 +84,9 @@ class StrictIvars::Processor < Prism::Visitor
 
 			@context << name
 
-			@annotations << [location.start_character_offset, :start, name]
-			@annotations << [location.end_character_offset, :end, name]
+			@annotations <<
+				[location.start_character_offset, :start, name] <<
+				[location.end_character_offset, :end, name]
 		end
 
 		super
