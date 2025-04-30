@@ -1,6 +1,6 @@
 # Strict Ivars
 
-Strict Ivars is a tiny pre-processor for Ruby that guards your instance variable reads, ensuring the instance variable is actually defined. This helps catch typos nice and early.
+Strict Ivars is a tiny pre-processor for Ruby that guards your instance variable reads, ensuring the instance variable is actually defined. This helps catch typos nice and early. It‘s especially good when used with [Literal](https://literal.fun).
 
 ## How does it work?
 
