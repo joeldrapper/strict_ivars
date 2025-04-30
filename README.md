@@ -36,7 +36,7 @@ You may want to set it to `require: false` here because you should require it ma
 gem "strict_ivars", require: false
 ```
 
-Now the gem is installed, you should require and initialize the gem as early as possible in your boot process. Ideally, this should be right after bootsnap is set up. In Rails, this will be in your `boot.rb` file.
+Now the gem is installed, you should require and initialize the gem as early as possible in your boot process. Ideally, this should be right after Bootsnap is set up. In Rails, this will be in your `boot.rb` file.
 
 ```ruby
 require "strict_ivars"
@@ -50,13 +50,27 @@ You can pass an array of globs to `include:` and `exclude:`.
 
 Because Strict Ivars only transforms the source code that matches your include paths and becuase the check happens at runtime, it’s completely compatible with the rest of the Ruby ecosystem.
 
-### For apps
+#### For apps
 
 Strict Ivars is really designed for apps, where you control the boot process and you want some extra safety in the code you and your team writes.
 
-### For libraries
+#### For libraries
 
 You could use Strict Ivars as a dev dependency in your gem’s test suite, but I don’t recommend initializing Strict Ivars in a library directly.
+
+## Performance
+
+#### Startup performance
+
+Using Strict Ivars will impact startup performance since it needs to process each Ruby file you require. However, if you are using Bootsnap, the processed instruction sequences are cached and you probably won’t notice the incremental cache misses day-to-day.
+
+#### Runtime performance
+
+In my benchmarks on Ruby 3.4 with YJIT, it’s difficult to tell if there is any performance difference with or without the `defined?` guards at runtime. Sometimes it’s about 1% faster with the guards than without. Sometimes the other way around.
+
+On my laptop, a method that returns an instance varible takes about 15ns and a method that checks if an instance varible is defined and then returns it takes about 15ns.
+
+All this is to say, I don’t think there will be any measurable runtime performance impact.
 
 ## Uninstall
 
