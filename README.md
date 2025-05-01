@@ -26,6 +26,50 @@ The replacement happens on load, so you never see this in your source code. It�
 
 The real guard is a little uglier than this. It uses `::Kernel.raise` so it’s compatible with `BasicObject`. It also raises a `StrictIvars::NameError` with a helpful message mentioning the name of the instance variable, and that inherits from `NameError`, allowing you to rescue either `NameError` or `StrictIvars::NameError`.
 
+**When you check defined already**
+
+Within the same context (e.g. class definition, module definition, block, method), if you check `defined?`, Strict Ivars will not add a guard to reads of the checked instance variable.
+
+```ruby
+if defined?(@foo)
+  @foo
+end
+```
+
+This applies even if the read is not in one of the conditional’s branches since you’ve indicated local awareness of the potential for this instance variable not being defined.
+
+```ruby
+if defined?(@foo)
+  # anything
+end
+
+@foo
+```
+
+**Writes:**
+
+Strict Ivars doesn’t apply to writes, since these are considered the authoritative source of the instance variable definitions.
+
+```ruby
+@foo = 1
+```
+
+**Or-writes:**
+
+This is considered a definition and not guarded.
+
+```ruby
+@foo ||= 1
+```
+
+**And-writes:**
+
+This is considered a definition and not guarded.
+
+```ruby
+@foo &&= 1
+```
+
 ## Setup
 
 Install the gem by adding it to your `Gemfile` and running `bundle install`.
