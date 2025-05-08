@@ -85,7 +85,7 @@ Now the gem is installed, you should require and initialize the gem as early as 
 ```ruby
 require "strict_ivars"
 
-StrictIvars.init(include: ["#{Dir.pwd}/**/*"])
+StrictIvars.init(include: ["#{Dir.pwd}/**/*"], exclude: ["#{Dir.pwd}/vendor/**/*"])
 ```
 
 You can pass an array of globs to `include:` and `exclude:`.
