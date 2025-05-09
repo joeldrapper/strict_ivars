@@ -51,17 +51,6 @@ class StrictIvars::Processor < Prism::Visitor
 		new_context { super }
 	end
 
-	#: (Prism::DefinedNode) -> void
-	def visit_defined_node(node)
-		value = node.value
-
-		if Prism::InstanceVariableReadNode === value
-			@context << value.name
-		end
-
-		super
-	end
-
 	#: (Prism::DefNode) -> void
 	def visit_def_node(node)
 		new_context { super }

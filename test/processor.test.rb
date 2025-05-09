@@ -234,28 +234,6 @@ test "singleton class isolation" do
 	RUBY
 end
 
-test "manual defined? guard" do
-	processed = StrictIvars::Processor.call(<<~RUBY)
-		def foo
-			if defined?(@foo)
-				@foo
-			else
-				@foo = 1
-			end
-		end
-	RUBY
-
-	assert_equal_ruby processed, <<~RUBY
-		def foo
-			if defined?(@foo)
-				@foo
-			else
-				@foo = 1
-			end
-		end
-	RUBY
-end
-
 def guarded(name)
 	"(defined?(#{name.name}) ? #{name.name} : (::Kernel.raise(::StrictIvars::NameError.new('Undefined instance variable #{name.name}'))))"
 end
