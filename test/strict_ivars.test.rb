@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-StrictIvars.init(include: ["#{Dir.pwd}/**/*"])
-
 require_relative "example"
 
 example = Example.new
