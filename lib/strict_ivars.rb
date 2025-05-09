@@ -2,12 +2,21 @@
 
 require "prism"
 require "require-hooks/setup"
+require "strict_ivars/version"
+require "strict_ivars/configuration"
 
 module StrictIvars
 	NameError = Class.new(::NameError)
 
+	CONFIG = Configuration.new
+
 	#: (include: Array[String], exclude: Array[String]) -> void
 	def self.init(include: [], exclude: [])
+		require "strict_ivars/patch_eval"
+
+		CONFIG.include(*include)
+		CONFIG.exclude(*exclude)
+
 		RequireHooks.source_transform(
 			patterns: include,
 			exclude_patterns: exclude

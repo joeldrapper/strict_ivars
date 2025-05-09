@@ -14,3 +14,5 @@ end
 Bundler.require :test
 
 require "strict_ivars"
+
+StrictIvars.init(include: ["#{Dir.pwd}/**/*"], exclude: ["**/excluded.rb"])
