@@ -3,6 +3,7 @@
 require "prism"
 require "require-hooks/setup"
 require "strict_ivars/version"
+require "strict_ivars/processor"
 require "strict_ivars/configuration"
 
 module StrictIvars
@@ -12,8 +13,6 @@ module StrictIvars
 
 	#: (include: Array[String], exclude: Array[String]) -> void
 	def self.init(include: [], exclude: [])
-		require "strict_ivars/patch_eval"
-
 		CONFIG.include(*include)
 		CONFIG.exclude(*exclude)
 
@@ -26,5 +25,3 @@ module StrictIvars
 		end
 	end
 end
-
-require "strict_ivars/processor"
