@@ -3,25 +3,71 @@
 require "prism"
 require "require-hooks/setup"
 require "strict_ivars/version"
+require "strict_ivars/base_processor"
 require "strict_ivars/processor"
 require "strict_ivars/configuration"
 
 module StrictIvars
 	NameError = Class.new(::NameError)
 
+	EMPTY_ARRAY = [].freeze
+	EVERYTHING = ["**/*"].freeze
+	METHOD_METHOD = Module.instance_method(:method)
+
 	CONFIG = Configuration.new
 
 	#: (include: Array[String], exclude: Array[String]) -> void
-	def self.init(include: [], exclude: [])
-		CONFIG.include(*include)
-		CONFIG.exclude(*exclude)
+	def self.init(include: EMPTY_ARRAY, exclude: EMPTY_ARRAY)
+		CONFIG.include(*include) unless include.length == 0
+		CONFIG.exclude(*exclude) unless exclude.length == 0
 
 		RequireHooks.source_transform(
-			patterns: include,
-			exclude_patterns: exclude
+			patterns: EVERYTHING,
+			exclude_patterns: EMPTY_ARRAY
 		) do |path, source|
 			source ||= File.read(path)
-			Processor.call(source)
+
+			if CONFIG.match?(path)
+				Processor.call(source)
+			else
+				BaseProcessor.call(source)
+			end
 		end
+	end
+
+	def self.process_eval_args(receiver, method_name, *args)
+		method = METHOD_METHOD.bind_call(receiver, method_name)
+		owner = method.owner
+
+		source, file = nil
+
+		case method_name
+		when :class_eval, :module_eval
+			if Module == owner
+				source, file = args
+			end
+		when :instance_eval
+			if BasicObject == owner
+				source, file = args
+			end
+		when :eval
+			if Kernel == owner
+				source, binding, file = args
+			elsif Binding == owner
+				source, file = args
+			end
+		end
+
+		if String === source
+			file ||= caller_locations(1, 1).first&.path
+
+			if CONFIG.match?(file)
+				args[0] = Processor.call(source)
+			else
+				args[0] = BaseProcessor.call(source)
+			end
+		end
+
+		args
 	end
 end

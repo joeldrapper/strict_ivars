@@ -22,7 +22,8 @@ class StrictIvars::Configuration
 	end
 
 	#: (String) -> bool
-	def match(path)
+	def match?(path)
+		return false unless String === path
 		path = File.absolute_path(path)
 		return false if @exclude.any? { |pattern| File.fnmatch?(pattern, path) }
 		return true if @include.any? { |pattern| File.fnmatch?(pattern, path) }
