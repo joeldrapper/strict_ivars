@@ -2,6 +2,9 @@
 
 Strict Ivars is a tiny pre-processor for Ruby that guards your instance variable reads, ensuring the instance variable is actually defined. This helps catch typos nice and early. It‘s especially good when used with [Literal](https://literal.fun) and [Phlex](https://www.phlex.fun), though it also works with ERB.
 
+> [!NOTE]  
+> JRuby and TruffleRuby are not currently supported.
+
 ## Setup
 
 Strict Ivars should be used in apps not libraries. Though you could use it in your library’s test suite.
