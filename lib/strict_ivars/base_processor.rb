@@ -41,12 +41,12 @@ class StrictIvars::BaseProcessor < Prism::Visitor
 				@annotations.push(
 					[receiver_location.start_character_offset, "(#{receiver_local} = "],
 					[receiver_location.end_character_offset, ")"],
-					[location.start_character_offset, "*(::StrictIvars.process_eval_args(#{receiver_local}, :#{name}, "],
+					[location.start_character_offset, "*(::StrictIvars.__process_eval_args__(#{receiver_local}, :#{name}, "],
 					[location.end_character_offset, "))"]
 				)
 			else
 				@annotations.push(
-					[location.start_character_offset, "*(::StrictIvars.process_eval_args(self, :#{name}, "],
+					[location.start_character_offset, "*(::StrictIvars.__process_eval_args__(self, :#{name}, "],
 					[location.end_character_offset, "))"]
 				)
 			end
