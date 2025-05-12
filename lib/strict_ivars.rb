@@ -5,6 +5,7 @@ require "prism"
 require "securerandom"
 
 require "require-hooks/setup"
+
 require "strict_ivars/version"
 require "strict_ivars/base_processor"
 require "strict_ivars/processor"
