@@ -77,6 +77,50 @@ And-writes are considered an authoritative definition, not a read.
 @foo &&= 1
 ```
 
+## Common issues
+
+#### Implicitly depending on undefined instance variables
+
+```ruby
+def description
+  return @description if @description.present?
+  @description = get_description
+end
+```
+
+This example is relying on Ruby’s behaviour of returning `nil` for undefiend instance variables, which is completely unnecessary. Instead of using `present?`, we could use `defined?` here.
+
+```ruby
+def description
+  return @description if defined?(@description)
+  @description = get_description
+end
+```
+
+Alternatively, as long as `get_description` doesn’t return `nil` and expect us to memoize it, we could use an “or-write” `||=`
+
+```ruby
+def description
+  @description ||= get_description
+end
+```
+
+#### Rendering instance variables that are only set somtimes
+
+It’s common to render an instance variable in an ERB view that you only set on some controllers.
+
+```erb
+<div data-favourites="<%= @user_favourites %>"></div>
+```
+
+The best solution to this to always set it on all controllers, but set it to `nil` in the cases where you don’t have anything to render. This will prevent you from making a typo in your views.
+
+Alternatively, you could update the view to be explicit about the fact this ivar may not be set
+
+```erb
+<div data-favourites="<%= (@user_favourites ||= nil) %>"></div>
+```
+
 ## Performance
 
 #### Boot performance
