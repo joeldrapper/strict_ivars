@@ -77,7 +77,7 @@ And-writes are considered an authoritative definition, not a read.
 
 ## Performance
 
-#### Startup performance
+#### Boot performance
 
 Using Strict Ivars will impact startup performance since it needs to process each Ruby file you require. However, if you are using Bootsnap, the processed RubyVM::InstructionSequences will be cached and you probably won’t notice the incremental cache misses day-to-day.
 
