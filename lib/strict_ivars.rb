@@ -82,4 +82,8 @@ module StrictIvars
 
 		args
 	end
+
+	def self.__eval_block_from_forwarding__(*, &block)
+		block
+	end
 end

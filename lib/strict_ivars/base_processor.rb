@@ -34,6 +34,12 @@ class StrictIvars::BaseProcessor < Prism::Visitor
 		if EVAL_METHODS.include?(name) && (arguments = node.arguments)
 			location = arguments.location
 
+			closing = if arguments.contains_forwarding?
+				")), &(::StrictIvars.__eval_block_from_forwarding__(...))"
+			else
+				"))"
+			end
+
 			if node.receiver
 				receiver_local = "__eval_receiver_#{SecureRandom.hex(8)}__"
 				receiver_location = node.receiver.location
@@ -42,12 +48,12 @@ class StrictIvars::BaseProcessor < Prism::Visitor
 					[receiver_location.start_character_offset, "(#{receiver_local} = "],
 					[receiver_location.end_character_offset, ")"],
 					[location.start_character_offset, "*(::StrictIvars.__process_eval_args__(#{receiver_local}, :#{name}, "],
-					[location.end_character_offset, "))"]
+					[location.end_character_offset, closing]
 				)
 			else
 				@annotations.push(
 					[location.start_character_offset, "*(::StrictIvars.__process_eval_args__(self, :#{name}, "],
-					[location.end_character_offset, "))"]
+					[location.end_character_offset, closing]
 				)
 			end
 		end
