@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
+require "set"
 require "prism"
+require "securerandom"
+
 require "require-hooks/setup"
 require "strict_ivars/version"
 require "strict_ivars/base_processor"

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "securerandom"
-
 class StrictIvars::BaseProcessor < Prism::Visitor
 	EVAL_METHODS = Set[:class_eval, :module_eval, :instance_eval, :eval].freeze
 
