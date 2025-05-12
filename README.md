@@ -87,6 +87,10 @@ In my benchmarks on Ruby 3.4 with YJIT, it’s difficult to tell if there is any
 
 On my laptop, a method that returns an instance varible takes about 15ns and a method that checks if an instance varible is defined and then returns it takes about 15ns. All this is to say, I don’t think there will be any measurable runtime performance impact, at least not in Ruby 3.4.
 
+#### Dynamic evals
+
+There is a small additional cost to dynamically evaluating code via `eval`, `class_eval`, `module_eval`, `instance_eval` and `binding.eval`. Dynamic evaluation usually only happens at boot time but it can happen at runtime depending on how you use it.
+
 ## Uninstall
 
 Becuase Strict Ivars only ever makes your code safer, you can always back out without anything breaking.
