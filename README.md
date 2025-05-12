@@ -29,6 +29,8 @@ StrictIvars.init(include: ["#{Dir.pwd}/**/*"], exclude: ["#{Dir.pwd}/vendor/**/*
 
 This example include everything in the current directory apart from the `./vendor` folder (which is where GitHub Actions installs gems).
 
+If you’re using Bootsnap, you should clear your bootsnap cache by deleting the folder `tmp/cache/bootsnap`.
+
 ## How does it work?
 
 When Strict Ivars detects that you are loading code from paths its configured to handle, it quickly looks for instance variable reads and guards them with a `defined?` check.
