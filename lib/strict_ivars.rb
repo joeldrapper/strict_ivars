@@ -16,6 +16,16 @@ module StrictIvars
 
 	CONFIG = Configuration.new
 
+	# Initializes StrictIvars so that code loaded after this point will be
+	# guarded against undefined instance variable reads. You can pass an array
+	# of globs to `include:` and `exclude:`.
+	#
+	# ```ruby
+	# StrictIvars.init(
+	#   include: ["#{Dir.pwd}/**/*"],
+	#   exclude: ["#{Dir.pwd}/vendor/**/*"]
+	# )
+	# ```
 	#: (include: Array[String], exclude: Array[String]) -> void
 	def self.init(include: EMPTY_ARRAY, exclude: EMPTY_ARRAY)
 		CONFIG.include(*include) unless include.length == 0
