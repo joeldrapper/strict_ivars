@@ -1,49 +1,52 @@
-name: Ruby
-
+name: CI
 on:
   push:
     branches: ["main"]
   pull_request:
     branches: ["main"]
-
-permissions:
-  contents: read
-
 jobs:
-  ruby-versions:
-    uses: ruby/actions/.github/workflows/ruby_versions.yml@3fbf038d6f0d8043b914f923764c61bc2a114a77
-    with:
-      engine: all
-      min_version: 3.1
-
-  test:
-    needs: ruby-versions
-    runs-on: ubuntu-latest
+  tests:
     strategy:
       fail-fast: false
       matrix:
-        ruby-version: ${{ fromJson(needs.ruby-versions.outputs.versions) }}
+        os: ["ubuntu-latest", "macos-latest"]
+        ruby-version:
+          - "3.2"
+          - "3.3"
+          - "3.4"
+          - "head"
+
+    runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Ruby
+      - uses: actions/checkout@v4
+
+      - name: Setup
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby-version }}
-          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-          bundler-args: --without development
-      - name: Quickdraw tests
-        run: bundle exec qt -t 1 "./test/**/*.test.rb"
+          bundler-cache: false
+
+      - name: Install dependencies
+        run: |
+          bundle install --jobs 4 --without development
+
+      - name: Quickdraw Tests
+        run: bundle exec qt -t 1
+
   rubocop:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        ruby-version: ["3.4"]
+    runs-on: "ubuntu-latest"
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Ruby
+      - uses: actions/checkout@v4
+
+      - name: Setup
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ matrix.ruby-version }}
-          bundler-cache: true
-      - name: Run RuboCop
+          ruby-version: "3.4"
+          bundler-cache: false
+
+      - name: Install dependencies
+        run: |
+          bundle install --jobs 4
+
+      - name: Rubocop
         run: bundle exec rubocop
