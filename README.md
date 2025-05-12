@@ -115,10 +115,18 @@ It’s common to render an instance variable in an ERB view that you only set on
 
 The best solution to this to always set it on all controllers, but set it to `nil` in the cases where you don’t have anything to render. This will prevent you from making a typo in your views.
 
-Alternatively, you could update the view to be explicit about the fact this ivar may not be set
+Alternatively, you could update the view to be explicit about the fact this ivar may not be set.
 
 ```erb
 <div data-favourites="<%= (@user_favourites ||= nil) %>"></div>
+```
+
+Better yet, add a `defined?` check:
+
+```erb
+<% if defined?(@user_favourites) %>
+  <div data-favourites="<%= @user_favourites %>"></div>
+<% end %>
 ```
 
 ## Performance
