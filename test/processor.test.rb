@@ -14,6 +14,22 @@ test "basic" do
 	RUBY
 end
 
+test "defined" do
+	processed = StrictIvars::Processor.call(<<~RUBY)
+		def foo
+			return @foo if defined?(@foo)
+			@foo = 2
+		end
+	RUBY
+
+	assert_equal_ruby processed, <<~RUBY
+		def foo
+			return #{guarded(:@foo)} if defined?(@foo)
+			@foo = 2
+		end
+	RUBY
+end
+
 test "conditional" do
 	processed = StrictIvars::Processor.call(<<~RUBY)
 		def foo
