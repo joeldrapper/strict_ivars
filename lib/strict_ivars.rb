@@ -35,6 +35,8 @@ module StrictIvars
 		end
 	end
 
+	# For internal use only. This method pre-processes arguments to an eval method.
+	#: (Object, Symbol, *untyped)
 	def self.process_eval_args(receiver, method_name, *args)
 		method = METHOD_METHOD.bind_call(receiver, method_name)
 		owner = method.owner
