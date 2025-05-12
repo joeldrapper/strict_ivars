@@ -1,0 +1,52 @@
+name: CI
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+jobs:
+  tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["ubuntu-latest", "macos-latest"]
+        ruby-version:
+          - "3.2"
+          - "3.3"
+          - "3.4"
+          - "head"
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+          bundler-cache: false
+
+      - name: Install dependencies
+        run: |
+          bundle install --jobs 4 --without development
+
+      - name: Quickdraw Tests
+        run: bundle exec qt -t 1
+
+  rubocop:
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+          bundler-cache: false
+
+      - name: Install dependencies
+        run: |
+          bundle install --jobs 4
+
+      - name: Rubocop
+        run: bundle exec rubocop
