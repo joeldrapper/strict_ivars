@@ -82,9 +82,7 @@ Using Strict Ivars will impact startup performance since it needs to process eac
 
 In my benchmarks on Ruby 3.4 with YJIT, it’s difficult to tell if there is any performance difference with or without the `defined?` guards at runtime. Sometimes it’s about 1% faster with the guards than without. Sometimes the other way around.
 
-On my laptop, a method that returns an instance varible takes about 15ns and a method that checks if an instance varible is defined and then returns it takes about 15ns.
-
-All this is to say, I don’t think there will be any measurable runtime performance impact.
+On my laptop, a method that returns an instance varible takes about 15ns and a method that checks if an instance varible is defined and then returns it takes about 15ns. All this is to say, I don’t think there will be any measurable runtime performance impact, at least not in Ruby 3.4.
 
 ## Uninstall
 
