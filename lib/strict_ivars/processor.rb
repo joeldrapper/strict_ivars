@@ -1,36 +1,6 @@
 # frozen_string_literal: true
 
-class StrictIvars::Processor < Prism::Visitor
-	#: (String) -> String
-	def self.call(source)
-		visitor = new
-		visitor.visit(Prism.parse(source).value)
-		buffer = source.dup
-		annotations = visitor.annotations
-		annotations.sort_by!(&:first)
-
-		annotations.reverse_each do |offset, action, name|
-			case action
-			when :start
-				buffer.insert(offset, "(defined?(#{name}) ? ")
-			when :end
-				buffer.insert(offset, " : (::Kernel.raise(::StrictIvars::NameError.new('Undefined instance variable #{name}'))))")
-			else
-				raise "Invalid annotation"
-			end
-		end
-
-		buffer
-	end
-
-	def initialize
-		@context = Set[]
-		@annotations = []
-	end
-
-	#: Array[[Integer, :start | :end, Symbol]]
-	attr_reader :annotations
-
+class StrictIvars::Processor < StrictIvars::BaseProcessor
 	#: (Prism::ClassNode) -> void
 	def visit_class_node(node)
 		new_context { super }
@@ -84,9 +54,10 @@ class StrictIvars::Processor < Prism::Visitor
 
 			@context << name
 
-			@annotations <<
-				[location.start_character_offset, :start, name] <<
-				[location.end_character_offset, :end, name]
+			@annotations.push(
+				[location.start_character_offset, "(defined?(#{name}) ? "],
+				[location.end_character_offset, " : (::Kernel.raise(::StrictIvars::NameError.new('Undefined instance variable #{name}'))))"]
+			)
 		end
 
 		super
