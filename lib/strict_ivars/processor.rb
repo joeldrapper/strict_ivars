@@ -45,6 +45,15 @@ class StrictIvars::Processor < StrictIvars::BaseProcessor
 		branch { visit(node.else_clause) }
 	end
 
+	#: (Prism::DefinedNode) -> void
+	def visit_defined_node(node)
+		value = node.value
+
+		return if Prism::InstanceVariableReadNode === value
+
+		super
+	end
+
 	#: (Prism::InstanceVariableReadNode) -> void
 	def visit_instance_variable_read_node(node)
 		name = node.name
