@@ -83,6 +83,7 @@ module StrictIvars
 		args
 	end
 
+	#: () { () -> void } -> Proc
 	def self.__eval_block_from_forwarding__(*, &block)
 		block
 	end
