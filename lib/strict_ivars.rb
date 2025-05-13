@@ -4,13 +4,13 @@ require "set"
 require "prism"
 require "securerandom"
 
-require "require-hooks/setup"
-
 require "strict_ivars/version"
 require "strict_ivars/name_error"
 require "strict_ivars/base_processor"
 require "strict_ivars/processor"
 require "strict_ivars/configuration"
+
+require "require-hooks/setup"
 
 module StrictIvars
 	EMPTY_ARRAY = [].freeze
