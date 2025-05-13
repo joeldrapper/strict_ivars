@@ -251,5 +251,5 @@ test "singleton class isolation" do
 end
 
 def guarded(name)
-	"(defined?(#{name.name}) ? #{name.name} : (::Kernel.raise(::StrictIvars::NameError.new('Undefined instance variable #{name.name}'))))"
+	"(defined?(#{name.name}) ? #{name.name} : (::Kernel.raise(::StrictIvars::NameError.new(self, :#{name.name}))))"
 end

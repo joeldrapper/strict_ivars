@@ -7,13 +7,12 @@ require "securerandom"
 require "require-hooks/setup"
 
 require "strict_ivars/version"
+require "strict_ivars/name_error"
 require "strict_ivars/base_processor"
 require "strict_ivars/processor"
 require "strict_ivars/configuration"
 
 module StrictIvars
-	NameError = Class.new(::NameError)
-
 	EMPTY_ARRAY = [].freeze
 	EVERYTHING = ["**/*"].freeze
 	METHOD_METHOD = Module.instance_method(:method)
