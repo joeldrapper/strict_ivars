@@ -8,14 +8,14 @@ Gem::Specification.new do |spec|
 	spec.authors = ["Joel Drapper"]
 	spec.email = ["joel@drapper.me"]
 
-	spec.summary = "Raise an exception when using undefined instance variables."
-	spec.description = spec.summary
-	spec.homepage = "https://github.com/joeldrapper/strict_ivars"
+	spec.summary = "Make Ruby raise a NameError if you read an undefined instance variable."
+	spec.description = "Strict Ivars is a tiny pre-processor that guards you against undefined instance variable reads."
+	spec.homepage = "https://github.com/yippee-fun/strict_ivars"
 	spec.license = "MIT"
 	spec.required_ruby_version = ">= 3.1"
 
 	spec.metadata["homepage_uri"] = spec.homepage
-	spec.metadata["source_code_uri"] = "https://github.com/joeldrapper/strict_ivars"
+	spec.metadata["source_code_uri"] = "https://github.com/yippee-fun/strict_ivars"
 	spec.metadata["funding_uri"] = "https://github.com/sponsors/joeldrapper"
 
 	spec.files = Dir[
