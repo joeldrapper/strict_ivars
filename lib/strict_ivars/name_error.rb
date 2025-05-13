@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class StrictIvars::NameError < ::NameError
-	InstanceVariablesMethod = Kernel.instance_method(:instance_variables)
+	INSTANCE_VARIABLE_METHOD = Kernel.instance_method(:instance_variables)
 
 	def initialize(object, name)
-		suggestion = InstanceVariablesMethod.bind_call(object).max_by do |candidate|
+		suggestion = INSTANCE_VARIABLE_METHOD.bind_call(object).max_by do |candidate|
 			n_common_trigrams(candidate, name) / Math.sqrt(candidate.length)
 		end
 
