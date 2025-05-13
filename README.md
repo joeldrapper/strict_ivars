@@ -13,7 +13,7 @@ When combined with Literal, you can completely remove unexpected `nil`. Literal 
 
 ## Setup
 
-Strict Ivars should be used in apps not libraries. Though you could use it in your library’s test suite.
+Strict Ivars should really be used in apps not libraries. Though you could definitely use it in your library’s test suite to help catch issues in the library code.
 
 Install the gem by adding it to your `Gemfile` and running `bundle install`. You’ll probably want to set it to `require: false` here because you should require it manually at precisely the right moment.
 
