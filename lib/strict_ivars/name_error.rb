@@ -4,14 +4,16 @@ class StrictIvars::NameError < ::NameError
 	InstanceVariablesMethod = Kernel.instance_method(:instance_variables)
 
 	def initialize(object, name)
-		suggestion = InstanceVariablesMethod.bind_call(object).max_by { |it| n_common_trigrams(it, name).to_f / Math.sqrt(it.length) }
+		suggestion = InstanceVariablesMethod.bind_call(object).max_by do |candidate|
+			n_common_trigrams(candidate, name) / Math.sqrt(candidate.length)
+		end
 
-		super(
-			[
-				"Undefined instance variable `#{name}`.",
-				("Did you mean `#{suggestion}`?" if suggestion),
-			].join(" ")
-		)
+		message = [
+			"Undefined instance variable `#{name}`.",
+			("Did you mean `#{suggestion}`?" if suggestion),
+		].join(" ")
+
+		super(message)
 	end
 
 	private def n_common_trigrams(left, right)
