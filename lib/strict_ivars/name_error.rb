@@ -4,7 +4,7 @@ class StrictIvars::NameError < ::NameError
 	InstanceVariablesMethod = Kernel.instance_method(:instance_variables)
 
 	def initialize(object, name)
-		suggestion = InstanceVariablesMethod.bind_call(object).max_by { |it| n_common_trigrams(it, name) }
+		suggestion = InstanceVariablesMethod.bind_call(object).max_by { |it| n_common_trigrams(it, name).to_f / Math.sqrt(it.length) }
 
 		super(
 			[
