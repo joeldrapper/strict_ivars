@@ -65,7 +65,7 @@ class StrictIvars::Processor < StrictIvars::BaseProcessor
 
 			@annotations.push(
 				[location.start_character_offset, "(defined?(#{name}) ? "],
-				[location.end_character_offset, " : (::Kernel.raise(::StrictIvars::NameError.new('Undefined instance variable #{name}'))))"]
+				[location.end_character_offset, " : (::Kernel.raise(::StrictIvars::NameError.new(self, :#{name}))))"]
 			)
 		end
 
