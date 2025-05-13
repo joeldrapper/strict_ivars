@@ -1,6 +1,12 @@
 # Strict Ivars
 
-Strict Ivars is a tiny pre-processor for Ruby that guards your instance variable reads, ensuring the instance variable is actually defined. This helps catch typos nice and early. It‘s especially good when used with [Literal](https://literal.fun) and [Phlex](https://www.phlex.fun), though it also works with ERB.
+If you reference an undefined method, constant or local varaible, Ruby will helpfully raise a `NameError`. But reference an undefined _instance_ variable and Ruby just returns `nil`. This can lead to all kinds of bugs — many of which can lay dormant for years before surprising you with an unexpected outage, data breach or data loss event.
+
+Strict Ivars solves this by making Ruby raise a `NameError` any time you read an undefined instance varaible. It’s enabled with two lines of code in your boot process, then it just works in the background and you’ll never have to think about it again. Strict Ivars has no known false-positives or false-negatives.
+
+It‘s especially good when used with [Literal](https://literal.fun) and [Phlex](https://www.phlex.fun), though it also works with regular Ruby objects and even ERB templates, which are actually pretty common spots for undefined instance variable reads to hide since that’s the main way of passing data to ERB.
+
+When combined with Literal, you can completely remove unexpected `nil`. Literal validates your inputs and Strict Ivars ensures you’re reading the right instance variables.
 
 > [!NOTE]  
 > JRuby and TruffleRuby are not currently supported.
