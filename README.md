@@ -35,6 +35,19 @@ StrictIvars.init(include: ["#{Dir.pwd}/**/*"], exclude: ["#{Dir.pwd}/vendor/**/*
 
 This example include everything in the current directory apart from the `./vendor` folder (which is where GitHub Actions installs gems).
 
+If you’re setting this up in Rails, your `boot.rb` file should look something like this.
+
+```ruby
+ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../Gemfile", __dir__)
+
+require "bundler/setup" # Set up gems listed in the Gemfile.
+require "bootsnap/setup" # Speed up boot time by caching expensive operations.
+
+require "strict_ivars"
+
+StrictIvars.init(include: ["#{Dir.pwd}/**/*"], exclude: ["#{Dir.pwd}/vendor/**/*"])
+```
+
 If you’re using Bootsnap, you should clear your bootsnap cache by deleting the folder `tmp/cache/bootsnap`.
 
 ## How does it work?
