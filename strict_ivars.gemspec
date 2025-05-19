@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
 	spec.email = ["joel@drapper.me"]
 
 	spec.summary = "Make Ruby raise a NameError if you read an undefined instance variable."
-	spec.description = "Strict Ivars is a tiny pre-processor that guards you against undefined instance variable reads."
+	spec.description = "Strict Ivars is a tiny pre-processor that guards you against undefined instance variable reads. If you do read an undefined instance variable, it will raise a NameError."
 	spec.homepage = "https://github.com/yippee-fun/strict_ivars"
 	spec.license = "MIT"
 	spec.required_ruby_version = ">= 3.1"
