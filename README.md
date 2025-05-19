@@ -4,11 +4,11 @@ If you reference an undefined method, constant or local varaible, Ruby will help
 
 Strict Ivars solves this by making Ruby raise a `NameError` any time you read an undefined instance varaible. It’s enabled with two lines of code in your boot process, then it just works in the background and you’ll never have to think about it again. Strict Ivars has no known false-positives or false-negatives.
 
-It‘s especially good when used with [Literal](https://literal.fun) and [Phlex](https://www.phlex.fun), though it also works with regular Ruby objects and even ERB templates, which are actually pretty common spots for undefined instance variable reads to hide since that’s the main way of passing data to ERB.
+It’s especially good when used with [Literal](https://literal.fun) and [Phlex](https://www.phlex.fun), though it also works with regular Ruby objects and even ERB templates, which are actually pretty common spots for undefined instance variable reads to hide since that’s the main way of passing data to ERB.
 
-When combined with Literal, you can completely remove unexpected `nil`. Literal validates your inputs and Strict Ivars ensures you’re reading the right instance variables.
+When combined with Literal, you can essentially remove all unexpected `nil`s. Literal validates your inputs and Strict Ivars ensures you’re reading the right instance variables.
 
-> [!NOTE]  
+> [!NOTE]
 > JRuby and TruffleRuby are not currently supported.
 
 ## Setup
