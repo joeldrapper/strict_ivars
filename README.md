@@ -96,7 +96,7 @@ And-writes are considered an authoritative definition, not a read.
 @foo &&= 1
 ```
 
-## Common issues
+## Common mistakes
 
 #### Implicitly depending on undefined instance variables
 
@@ -163,6 +163,10 @@ On my laptop, a method that returns an instance varible takes about 15ns and a m
 #### Dynamic evals
 
 There is a small additional cost to dynamically evaluating code via `eval`, `class_eval`, `module_eval`, `instance_eval` and `binding.eval`. Dynamic evaluation usually only happens at boot time but it can happen at runtime depending on how you use it.
+
+## Stability
+
+Strict Ivars has 100% line and branch coverage and there are no known false-positives, false-negatives or bugs.
 
 ## Uninstall
 
