@@ -31,8 +31,8 @@ module StrictIvars
 	# ```
 	#: (include: Array[String], exclude: Array[String]) -> void
 	def self.init(include: EMPTY_ARRAY, exclude: EMPTY_ARRAY)
-		CONFIG.include(*include) unless include.length == 0
-		CONFIG.exclude(*exclude) unless exclude.length == 0
+		CONFIG.include(*include)
+		CONFIG.exclude(*exclude)
 
 		RequireHooks.source_transform(
 			patterns: EVERYTHING,
@@ -74,7 +74,7 @@ module StrictIvars
 		end
 
 		if String === source
-			file ||= caller_locations(1, 1).first&.path
+			file ||= caller_locations(1, 1).first.path
 
 			if CONFIG.match?(file)
 				args[0] = Processor.call(source)
@@ -83,6 +83,8 @@ module StrictIvars
 			end
 		end
 
+		args
+	rescue ::NameError
 		args
 	end
 

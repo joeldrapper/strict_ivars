@@ -30,6 +30,20 @@ test "defined" do
 	RUBY
 end
 
+test "defined with a non-ivar" do
+	processed = StrictIvars::Processor.call(<<~RUBY)
+		def foo
+			return true if defined?(SomeConst)
+		end
+	RUBY
+
+	assert_equal_ruby processed, <<~RUBY
+		def foo
+			return true if defined?(SomeConst)
+		end
+	RUBY
+end
+
 test "conditional" do
 	processed = StrictIvars::Processor.call(<<~RUBY)
 		def foo
