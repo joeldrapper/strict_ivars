@@ -23,7 +23,7 @@ class StrictIvars::BaseProcessor < Prism::Visitor
 		@annotations = []
 	end
 
-	#: Array[[Integer, :start_ivar_read | :end_ivar_read, Symbol]]
+	#: Array[[Integer, String]]
 	attr_reader :annotations
 
 	def visit_call_node(node)
