@@ -1,6 +1,6 @@
-# Strict Ivars
+ # Strict Ivars
 
-If you reference an undefined method, constant or local varaible, Ruby will helpfully raise a `NameError`. But reference an undefined _instance_ variable and Ruby just returns `nil`. This can lead to all kinds of bugs — many of which can lay dormant for years before surprising you with an unexpected outage, data breach or data loss event.
+If you reference an undefined method, constant or local varaible, Ruby will helpfully raise an error. But reference an undefined _instance_ variable and Ruby just returns `nil`. This can lead to all kinds of bugs — many of which can lay dormant for years before surprising you with an unexpected outage, data breach or data loss event.
 
 Strict Ivars solves this by making Ruby raise a `NameError` any time you read an undefined instance varaible. It’s enabled with two lines of code in your boot process, then it just works in the background and you’ll never have to think about it again. Strict Ivars has no known false-positives or false-negatives.
 
